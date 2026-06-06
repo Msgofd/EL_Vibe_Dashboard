@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CS Dashboard — Essilor Luxottica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0e1117; --surface:#161b26; --surface2:#1c2333;
+  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.13);
+  --text1:#e8eaf0; --text2:#8b91a8; --text3:#4a5068;
+  --line:#06c755; --line-lt:rgba(6,199,85,.12); --line-md:rgba(6,199,85,.25);
+  --email:#3b82f6; --email-lt:rgba(59,130,246,.12); --email-md:rgba(59,130,246,.25);
+  --red:#f87171; --red-lt:rgba(248,113,113,.12);
+  --blue:#60a5fa; --green:#34d399; --green-lt:rgba(52,211,153,.12); --amber:#fbbf24;
+  --font:'Sarabun',sans-serif; --mono:'JetBrains Mono',monospace;
+  --r-sm:6px; --r-md:10px; --r-lg:14px;
+}
+body { font-family:var(--font); background:var(--bg); color:var(--text1); min-height:100vh; padding:20px 24px 48px; font-size:14px; line-height:1.5; }
+
+/* TOKEN MODAL */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:100; display:flex; align-items:center; justify-content:center; }
+.modal-overlay.hidden { display:none; }
+.modal { background:var(--surface); border:1px solid var(--border2); border-radius:var(--r-lg); padding:28px; width:520px; max-width:90vw; box-shadow:0 24px 80px rgba(0,0,0,.5); }
+.modal h2 { font-size:16px; font-weight:600; margin-bottom:6px; color:var(--text1); }
+.modal p  { font-size:12px; color:var(--text2); margin-bottom:14px; line-height:1.6; }
+.modal textarea {
+  width:100%; height:110px; border:1px solid var(--border2); border-radius:var(--r-sm);
+  padding:10px; font-family:var(--mono); font-size:11px; resize:vertical;
+  outline:none; color:var(--text1); background:var(--surface2);
+}
+.modal textarea:focus { border-color:var(--blue); }
+.modal-footer { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+.btn { padding:8px 18px; border-radius:var(--r-sm); font-size:13px; font-weight:500; cursor:pointer; border:none; font-family:var(--font); }
+.btn-primary { background:#2563eb; color:#fff; }
+.btn-primary:hover { background:#1d4ed8; }
+.btn-ghost { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); }
+
+/* TOPBAR */
+.topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+.brand { display:flex; align-items:center; gap:10px; }
+.brand-logo { width:34px; height:34px; background:linear-gradient(135deg,#2563eb,#7c3aed); border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; font-weight:600; color:#fff; }
+.brand-name { font-size:15px; font-weight:600; color:var(--text1); }
+.brand-sub  { font-size:11px; color:var(--text3); }
+.topbar-right { display:flex; align-items:center; gap:8px; }
+.date-pill { font-family:var(--mono); font-size:11px; color:var(--text2); background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:4px 12px; }
+.live-badge { display:flex; align-items:center; gap:5px; font-size:11px; font-weight:500; color:var(--green); background:var(--green-lt); border:1px solid rgba(52,211,153,.3); border-radius:20px; padding:4px 10px; }
+.live-badge::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 1.6s ease infinite; }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.token-btn { display:flex; align-items:center; gap:5px; font-size:11px; font-weight:500; color:var(--text2); background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:4px 12px; cursor:pointer; }
+.token-btn:hover { border-color:var(--blue); color:var(--blue); }
+.refresh-info { font-family:var(--mono); font-size:10px; color:var(--text3); }
+
+.notice { text-align:center; font-size:12px; color:var(--red); background:var(--red-lt); border:1px solid rgba(248,113,113,.25); border-radius:var(--r-sm); padding:6px 12px; margin-bottom:18px; }
+
+/* STATUS BAR */
+.status-bar { display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:12px; }
+.status-ok  { color:var(--green); background:var(--green-lt); border:1px solid rgba(52,211,153,.3); border-radius:20px; padding:3px 10px; }
+.status-err { color:var(--red); background:var(--red-lt); border:1px solid rgba(248,113,113,.25); border-radius:20px; padding:3px 10px; }
+.status-loading { color:var(--text3); }
+
+/* LAYOUT */
+.layout { display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:start; }
+
+/* LEFT */
+.left-panel { display:flex; flex-direction:column; gap:12px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.3); }
+.card-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text3); margin-bottom:12px; }
+
+.donut-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; }
+.donut-legend { width:100%; display:flex; flex-direction:column; gap:6px; }
+.leg-row { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
+.leg-left { display:flex; align-items:center; gap:7px; color:var(--text2); }
+.leg-dot  { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.leg-num  { font-family:var(--mono); font-size:14px; font-weight:500; color:var(--text1); }
+
+.urgent-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--r-md); margin-bottom:8px; border:1px solid transparent; }
+.urgent-item:last-child { margin-bottom:0; }
+.urgent-item.g { background:rgba(52,211,153,.1); border-color:rgba(52,211,153,.25); }
+.urgent-item.r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.25); }
+.u-ico { width:28px; height:28px; border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; }
+.urgent-item.g .u-ico { background:rgba(52,211,153,.2); color:var(--green); }
+.urgent-item.r .u-ico { background:rgba(248,113,113,.2); color:var(--red); }
+.u-lbl { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; }
+.u-num { font-family:var(--mono); font-size:26px; font-weight:600; line-height:1; }
+.urgent-item.g .u-num { color:var(--green); }
+.urgent-item.r .u-num { color:var(--red); }
+
+/* RIGHT */
+.right-panel { display:flex; flex-direction:column; gap:16px; }
+
+.section-block { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.3); animation:fadeUp .35s ease both; }
+.section-block:nth-child(1){animation-delay:.05s} .section-block:nth-child(2){animation-delay:.1s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.section-head { display:flex; align-items:center; gap:8px; padding:12px 18px; border-bottom:1px solid var(--border); background:var(--surface2); }
+.section-head-ico { width:26px; height:26px; border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; }
+.section-head-ico svg { width:14px; height:14px; }
+.section-head-title { font-size:13px; font-weight:600; color:var(--text1); }
+
+/* col headers */
+.col-header-row { display:grid; grid-template-columns:150px 1fr 1fr; border-bottom:2px solid var(--border); }
+.col-header-blank { background:var(--surface2); border-right:1px solid var(--border); }
+.col-header-cell { display:flex; align-items:center; gap:9px; padding:10px 16px; border-right:1px solid var(--border); }
+.col-header-cell:last-child { border-right:none; }
+.col-header-cell.line-hdr  { background:var(--line-lt); color:var(--line); border-bottom:3px solid var(--line); }
+.col-header-cell.email-hdr { background:var(--email-lt); color:var(--email); border-bottom:3px solid var(--email); }
+.col-hdr-ico { width:22px; height:22px; border-radius:5px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.col-header-cell.line-hdr  .col-hdr-ico { background:var(--line-md); }
+.col-header-cell.email-hdr .col-hdr-ico { background:var(--email-md); }
+.col-hdr-ico svg { width:12px; height:12px; }
+.col-header-cell.line-hdr  .col-hdr-ico svg { stroke:var(--line); }
+.col-header-cell.email-hdr .col-hdr-ico svg { stroke:var(--email); }
+.col-hdr-name { font-size:13px; font-weight:700; line-height:1.2; }
+.col-hdr-sub  { font-size:10px; opacity:.75; margin-top:1px; }
+.col-hdr-count { font-family:var(--mono); font-weight:600; }
+
+/* data rows */
+.data-row { display:grid; grid-template-columns:150px 1fr 1fr; border-bottom:1px solid var(--border); }
+.data-row:last-child { border-bottom:none; }
+.row-label-cell { padding:14px 18px; border-right:1px solid var(--border); display:flex; align-items:center; background:var(--surface2); }
+.row-label-text { font-size:11px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:.06em; }
+.row-data-cell { padding:14px 16px; border-right:1px solid var(--border); }
+.row-data-cell:last-child { border-right:none; }
+.row-data-cell.line-cell  { background:rgba(6,199,85,.04); }
+.row-data-cell.email-cell { background:rgba(59,130,246,.04); }
+
+.stat-grid { display:grid; gap:6px; }
+.stat-grid.c2 { grid-template-columns:1fr 1fr; }
+.stat-grid.c3 { grid-template-columns:1fr 1fr 1fr; }
+.sbox { border-radius:var(--r-sm); padding:8px 10px; border:1px solid; }
+.line-cell  .sbox { background:rgba(6,199,85,.07); border-color:rgba(6,199,85,.2); }
+.email-cell .sbox { background:rgba(59,130,246,.07); border-color:rgba(59,130,246,.2); }
+.sbox-lbl { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; }
+.sbox-val { font-family:var(--mono); font-size:24px; font-weight:600; color:var(--text1); line-height:1; }
+.sbox-val.red  { color:var(--red); }
+.sbox-val.blue { color:var(--blue); }
+
+/* support donut */
+.sup-donut-row { display:flex; align-items:center; gap:12px; }
+.sup-svg { width:76px; height:76px; flex-shrink:0; }
+.sup-tags { display:flex; flex-direction:column; gap:4px; flex:1; }
+.stag { display:flex; justify-content:space-between; align-items:center; font-size:11px; }
+.stag-name { color:var(--text2); display:flex; align-items:center; gap:4px; }
+.stag-dot  { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.stag-val  { font-family:var(--mono); font-size:11px; font-weight:500; color:var(--text1); }
+
+/* smet */
+.smet-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.smet { border-radius:var(--r-sm); padding:8px 10px; border:1px solid; }
+.line-cell  .smet { background:rgba(6,199,85,.07); border-color:rgba(6,199,85,.2); }
+.email-cell .smet { background:rgba(59,130,246,.07); border-color:rgba(59,130,246,.2); }
+.smet-lbl { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }
+.smet-val { font-family:var(--mono); font-size:24px; font-weight:600; color:var(--text1); }
+.smet-val.red { color:var(--red); }
+
+/* result */
+.result-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.rbox { text-align:center; border-radius:var(--r-sm); padding:10px 8px; border:1px solid; }
+.rbox.g { background:rgba(52,211,153,.1); border-color:rgba(52,211,153,.25); }
+.rbox.r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.25); }
+.rbox-lbl { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px; }
+.rbox.g .rbox-lbl { color:var(--green); }
+.rbox.r .rbox-lbl { color:var(--red); }
+.rbox-val { font-family:var(--mono); font-size:28px; font-weight:600; }
+.rbox.g .rbox-val { color:var(--green); }
+.rbox.r .rbox-val { color:var(--red); }
+
+.spinner { display:inline-block; width:10px; height:10px; border:2px solid var(--border2); border-top-color:var(--blue); border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.online-user {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 8px; border-radius:var(--r-sm);
+  background:var(--surface2); border:1px solid var(--border);
+}
+.online-name  { font-size:11px; font-weight:500; color:var(--text1); line-height:1.2; }
+.online-page  { font-size:10px; color:var(--text3); }
+.online-duties { display:flex; gap:3px; flex-wrap:wrap; margin-top:2px; }
+.duty-tag { font-size:9px; padding:1px 5px; border-radius:3px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; }
+.duty-task    { background:rgba(124,58,237,.2); color:#a78bfa; }
+.duty-support { background:rgba(52,211,153,.15); color:#34d399; }
+.duty-keyin   { background:rgba(59,130,246,.15); color:#60a5fa; }
+.duty-qc      { background:rgba(251,191,36,.15); color:#fbbf24; }
+.duty-crm     { background:rgba(244,114,182,.15); color:#f472b6; }
+.online-mins  { font-family:var(--mono); font-size:9px; color:var(--text3); margin-left:auto; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<!-- TOKEN MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>🔑 ใส่ Bearer Token</h2>
+    <p>คัดลอก Token จาก DevTools → Network → dashboard → Request Headers → Authorization (ไม่ต้องใส่คำว่า "Bearer " นำหน้า)</p>
+    <textarea id="tokenInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveToken()">บันทึก &amp; โหลดข้อมูล</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-logo">EL</div>
+    <div>
+      <div class="brand-name">Essilor Luxottica</div>
+      <div class="brand-sub">Customer Service Dashboard</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="refresh-info" id="refreshInfo">—</span>
+    <div class="date-pill" id="dateDisplay">—</div>
+    <button class="token-btn" onclick="openModal()">🔑 Token</button>
+    <div class="live-badge">Live</div>
+  </div>
+</div>
+
+<div class="notice">* ข้อมูลบน Dashboard อาจมีการ Delay ประมาณ 1 นาที *</div>
+
+<div class="status-bar">
+  <span id="statusBadge" class="status-loading">⏳ รอ Token...</span>
+  <span id="lastUpdate" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="card">
+      <div class="card-label">Total Task Today</div>
+      <div class="donut-wrap">
+        <svg id="donutSvg" width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="48" fill="none" stroke="#1c2333" stroke-width="13"/>
+          <circle id="donutNormal" cx="60" cy="60" r="48" fill="none" stroke="#111827" stroke-width="13"
+            stroke-dasharray="0 301.6" stroke-dashoffset="75.4" stroke-linecap="round"/>
+          <circle id="donutUrgent" cx="60" cy="60" r="48" fill="none" stroke="#ef4444" stroke-width="13"
+            stroke-dasharray="0 301.6" stroke-linecap="round"/>
+          <text id="donutTotal" x="60" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="22" font-weight="600" fill="#e8eaf0">—</text>
+          <text x="60" y="71" text-anchor="middle" font-family="Sarabun" font-size="11" fill="#4a5068">Task</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="leg-row">
+            <div class="leg-left"><span class="leg-dot" style="background:#111827"></span>Normal Task</div>
+            <span class="leg-num" id="normalCount">—</span>
+          </div>
+          <div class="leg-row">
+            <div class="leg-left"><span class="leg-dot" style="background:#ef4444"></span>Urgent Task</div>
+            <span class="leg-num" id="urgentCount">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ONLINE USERS -->
+    <div class="card" id="onlineCard">
+      <div class="card-label" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>Online Now</span>
+        <span id="onlineCount" style="font-family:var(--mono);font-size:11px;background:var(--green-lt);color:var(--green);border:1px solid #a7f3d0;border-radius:20px;padding:1px 8px;">—</span>
+      </div>
+      <div id="onlineList" style="display:flex;flex-direction:column;gap:6px;">
+        <div style="font-size:11px;color:var(--text3);text-align:center;padding:8px 0;">กำลังโหลด...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Urgent Task</div>
+      <div class="urgent-item g">
+        <div class="u-ico">✓</div>
+        <div>
+          <div class="u-lbl">Completed</div>
+          <div class="u-num" id="urgentCompleted">—</div>
+        </div>
+      </div>
+      <div class="urgent-item r">
+        <div class="u-ico">!</div>
+        <div>
+          <div class="u-lbl">Pending</div>
+          <div class="u-num" id="urgentPending">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+
+    <!-- TASK CREATOR -->
+    <div class="section-block">
+      <div class="section-head">
+        <div class="section-head-ico" style="background:#ede9fe;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="3" width="6" height="2" rx="1"/><path d="M9 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <span class="section-head-title">Task Creator</span>
+      </div>
+
+      <div class="col-header-row">
+        <div class="col-header-blank"></div>
+        <div class="col-header-cell line-hdr">
+          <div class="col-hdr-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div><div class="col-hdr-name">Line</div><div class="col-hdr-sub">Create Today: <span class="col-hdr-count" id="hdrLineTotal">—</span></div></div>
+        </div>
+        <div class="col-header-cell email-hdr">
+          <div class="col-hdr-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+          <div><div class="col-hdr-name">Email</div><div class="col-hdr-sub">Create Today: <span class="col-hdr-count" id="hdrEmailTotal">—</span></div></div>
+        </div>
+      </div>
+
+      <!-- Create Yesterday (บรรทัดแรก) -->
+      <div class="data-row">
+        <div class="row-label-cell"><div class="row-label-text">Create Yesterday</div></div>
+        <div class="row-data-cell line-cell">
+          <div class="stat-grid c3">
+            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val red" id="L_allStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val red" id="L_allRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val red" id="L_allVip">—</div></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell">
+          <div class="stat-grid c3">
+            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val red" id="E_allStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val red" id="E_allRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val red" id="E_allVip">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Today (บรรทัดสอง) -->
+      <div class="data-row">
+        <div class="row-label-cell"><div class="row-label-text">Create Today</div></div>
+        <div class="row-data-cell line-cell">
+          <div class="stat-grid c3">
+            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val" id="L_todayStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val" id="L_todayRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val" id="L_todayVip">—</div></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell">
+          <div class="stat-grid c3">
+            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val" id="E_todayStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val" id="E_todayRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val" id="E_todayVip">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Tomorrow -->
+      <div class="data-row">
+        <div class="row-label-cell"><div class="row-label-text">Create Tomorrow</div></div>
+        <div class="row-data-cell line-cell">
+          <div class="stat-grid c3">
+            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val blue" id="L_tmrStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val blue" id="L_tmrRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val blue" id="L_tmrVip">—</div></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell">
+          <div class="stat-grid c3">
+            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val blue" id="E_tmrStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val blue" id="E_tmrRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val blue" id="E_tmrVip">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key-In -->
+      <div class="data-row">
+        <div class="row-label-cell"><div class="row-label-text">Key-In</div></div>
+        <div class="row-data-cell line-cell">
+          <div class="stat-grid c2">
+            <div class="sbox"><div class="sbox-lbl">Waiting</div><div class="sbox-val" id="L_keyinWait">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">Called</div><div class="sbox-val" id="L_keyinCalled">—</div></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell">
+          <div class="stat-grid c2">
+            <div class="sbox"><div class="sbox-lbl">Waiting</div><div class="sbox-val" id="E_keyinWait">—</div></div>
+            <div class="sbox"><div class="sbox-lbl">Called</div><div class="sbox-val" id="E_keyinCalled">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="section-block">
+      <div class="section-head">
+        <div class="section-head-ico" style="background:#d1fae5;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <span class="section-head-title">Support</span>
+      </div>
+
+      <div class="col-header-row">
+        <div class="col-header-blank"></div>
+        <div class="col-header-cell line-hdr">
+          <div class="col-hdr-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div><div class="col-hdr-name">Line</div><div class="col-hdr-sub">Waiting: <span class="col-hdr-count" id="hdrLineSup">—</span></div></div>
+        </div>
+        <div class="col-header-cell email-hdr">
+          <div class="col-hdr-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+          <div><div class="col-hdr-name">Email</div><div class="col-hdr-sub">Waiting: <span class="col-hdr-count" id="hdrEmailSup">—</span></div></div>
+        </div>
+      </div>
+
+      <!-- Task Distribution -->
+      <div class="data-row">
+        <div class="row-label-cell"><div class="row-label-text">Task Distribution</div></div>
+        <div class="row-data-cell line-cell">
+          <div class="sup-donut-row">
+            <svg class="sup-svg" id="L_supDonut" viewBox="0 0 76 76">
+              <circle cx="38" cy="38" r="28" fill="none" stroke="#1c2333" stroke-width="8"/>
+              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#e8eaf0" id="L_supTotal">—</text>
+              <text x="38" y="46" text-anchor="middle" font-family="Sarabun" font-size="7" fill="#4a5068">Task</text>
+            </svg>
+            <div class="sup-tags" id="L_supTags"></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell">
+          <div class="sup-donut-row">
+            <svg class="sup-svg" id="E_supDonut" viewBox="0 0 76 76">
+              <circle cx="38" cy="38" r="28" fill="none" stroke="#1c2333" stroke-width="8"/>
+              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#e8eaf0" id="E_supTotal">—</text>
+              <text x="38" y="46" text-anchor="middle" font-family="Sarabun" font-size="7" fill="#4a5068">Task</text>
+            </svg>
+            <div class="sup-tags" id="E_supTags"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Stats -->
+      <div class="data-row">
+        <div class="row-label-cell"><div class="row-label-text">Support Stats</div></div>
+        <div class="row-data-cell line-cell">
+          <div class="smet-grid">
+            <div class="smet"><div class="smet-lbl">Waiting Today</div><div class="smet-val" id="L_supWait">—</div></div>
+            <div class="smet"><div class="smet-lbl">In Progress</div><div class="smet-val" id="L_supInProg">—</div></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell">
+          <div class="smet-grid">
+            <div class="smet"><div class="smet-lbl">Waiting Today</div><div class="smet-val" id="E_supWait">—</div></div>
+            <div class="smet"><div class="smet-lbl">In Progress</div><div class="smet-val" id="E_supInProg">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Result -->
+      <div class="data-row">
+        <div class="row-label-cell"><div class="row-label-text">Support Result</div></div>
+        <div class="row-data-cell line-cell">
+          <div class="result-grid">
+            <div class="rbox g"><div class="rbox-lbl">Completed</div><div class="rbox-val" id="L_resComplete">—</div></div>
+            <div class="rbox r"><div class="rbox-lbl">Closed</div><div class="rbox-val" id="L_resClose">—</div></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell">
+          <div class="result-grid">
+            <div class="rbox g"><div class="rbox-lbl">Completed</div><div class="rbox-val" id="E_resComplete">—</div></div>
+            <div class="rbox r"><div class="rbox-lbl">Closed</div><div class="rbox-val" id="E_resClose">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Yesterday (all_time) -->
+      <div class="data-row">
+        <div class="row-label-cell" style="background:rgba(251,191,36,.08);border-right:1px solid rgba(251,191,36,.2);">
+          <div class="row-label-text" style="color:#fbbf24;">Support Yesterday</div>
+        </div>
+        <div class="row-data-cell line-cell" style="background:rgba(251,191,36,.05);">
+          <div class="sup-donut-row">
+            <svg class="sup-svg" id="L_supYestDonut" viewBox="0 0 76 76">
+              <circle cx="38" cy="38" r="28" fill="none" stroke="#1c2333" stroke-width="8"/>
+              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#e8eaf0" id="L_supYestTotal">—</text>
+              <text x="38" y="46" text-anchor="middle" font-family="Sarabun" font-size="7" fill="#4a5068">Task</text>
+            </svg>
+            <div class="sup-tags" id="L_supYestTags"></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell" style="background:rgba(251,191,36,.05);">
+          <div class="sup-donut-row">
+            <svg class="sup-svg" id="E_supYestDonut" viewBox="0 0 76 76">
+              <circle cx="38" cy="38" r="28" fill="none" stroke="#1c2333" stroke-width="8"/>
+              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#e8eaf0" id="E_supYestTotal">—</text>
+              <text x="38" y="46" text-anchor="middle" font-family="Sarabun" font-size="7" fill="#4a5068">Task</text>
+            </svg>
+            <div class="sup-tags" id="E_supYestTags"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Yesterday Stats -->
+      <div class="data-row">
+        <div class="row-label-cell" style="background:rgba(251,191,36,.08);border-right:1px solid rgba(251,191,36,.2);">
+          <div class="row-label-text" style="color:#fbbf24;">Yesterday Stats</div>
+        </div>
+        <div class="row-data-cell line-cell" style="background:rgba(251,191,36,.05);">
+          <div class="smet-grid">
+            <div class="smet" style="background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.2);"><div class="smet-lbl">Waiting</div><div class="smet-val" style="color:#fbbf24" id="L_supYestWait">—</div></div>
+            <div class="smet" style="background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.2);"><div class="smet-lbl">In Progress</div><div class="smet-val" style="color:#fbbf24" id="L_supYestInProg">—</div></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell" style="background:rgba(251,191,36,.05);">
+          <div class="smet-grid">
+            <div class="smet" style="background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.2);"><div class="smet-lbl">Waiting</div><div class="smet-val" style="color:#fbbf24" id="E_supYestWait">—</div></div>
+            <div class="smet" style="background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.2);"><div class="smet-lbl">In Progress</div><div class="smet-val" style="color:#fbbf24" id="E_supYestInProg">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Yesterday Result -->
+      <div class="data-row">
+        <div class="row-label-cell" style="background:rgba(251,191,36,.08);border-right:1px solid rgba(251,191,36,.2);">
+          <div class="row-label-text" style="color:#fbbf24;">Yesterday Result</div>
+        </div>
+        <div class="row-data-cell line-cell" style="background:rgba(251,191,36,.05);">
+          <div class="result-grid">
+            <div class="rbox g" style="background:#f0fdf4;border-color:#bbf7d0;"><div class="rbox-lbl">Completed</div><div class="rbox-val" id="L_supYestComplete">—</div></div>
+            <div class="rbox r" style="background:#fef2f2;border-color:#fecaca;"><div class="rbox-lbl">Closed</div><div class="rbox-val" id="L_supYestClose">—</div></div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell" style="background:rgba(251,191,36,.05);">
+          <div class="result-grid">
+            <div class="rbox g" style="background:#f0fdf4;border-color:#bbf7d0;"><div class="rbox-lbl">Completed</div><div class="rbox-val" id="E_supYestComplete">—</div></div>
+            <div class="rbox r" style="background:#fef2f2;border-color:#fecaca;"><div class="rbox-lbl">Closed</div><div class="rbox-val" id="E_supYestClose">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:24px;font-size:10px;color:var(--text3);font-family:var(--mono);" id="footer"></div>
+
+<script>
+const API_BASE    = 'https://essilor-api.devsmithdev.xyz/api-gateway/dashboard';
+const API_ONLINE  = 'https://essilor-api.devsmithdev.xyz/api-gateway/online-users';
+const COLORS = ['#3b82f6','#c084fc','#818cf8','#34d399','#f59e0b','#f87171','#a78bfa','#fb923c','#94a3b8','#6ee7b7','#fbbf24','#e879f9'];
+let token = localStorage.getItem('el_token') || '';
+let refreshTimer, countdownTimer, countdownSec = 60;
+
+function openModal() { document.getElementById('tokenInput').value = token; document.getElementById('modalOverlay').classList.remove('hidden'); }
+function closeModal() { document.getElementById('modalOverlay').classList.add('hidden'); }
+function saveToken() {
+  token = document.getElementById('tokenInput').value.trim().replace(/^Bearer\s+/i,'');
+  localStorage.setItem('el_token', token);
+  closeModal();
+  fetchData();
+}
+
+// ── Fetch both channels in parallel ──
+async function fetchChannel(channel) {
+  const url = channel ? API_BASE + '?channel=' + channel : API_BASE;
+  const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' } });
+  if (res.status === 401) throw new Error('401');
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+async function fetchData() {
+  if (!token) { openModal(); return; }
+  setStatus('loading');
+  try {
+    const [lineData, emailData, allData, onlineData] = await Promise.all([
+      fetchChannel('system'),
+      fetchChannel('email'),
+      fetchChannel(''),
+      fetch(API_ONLINE, { headers:{ 'Authorization':'Bearer '+token, 'Accept':'application/json' } }).then(r=>r.json())
+    ]);
+    renderLeft(allData);
+    renderChannel('L', lineData);
+    renderChannel('E', emailData);
+    renderOnlineUsers(onlineData);
+    setStatus('ok');
+    startCountdown();
+  } catch(e) {
+    if (e.message === '401') { setStatus('error','Token หมดอายุ — กรุณาอัปเดต Token ใหม่'); openModal(); }
+    else setStatus('error', 'เชื่อมต่อไม่ได้: ' + e.message);
+  }
+}
+
+// ── Render Online Users ──
+function renderOnlineUsers(data) {
+  const users = data?.online_users || [];
+  set('onlineCount', users.length + ' คน');
+
+  const PAGE_ORDER = { 'VIP':0, 'STOCK':1, 'RX':2 };
+  const PAGE_COLORS = { 'VIP':'#f59e0b', 'STOCK':'#3b82f6', 'RX':'#10b981' };
+
+  const sorted = [...users].sort((a,b) => {
+    const pa = PAGE_ORDER[a.current_page?.toUpperCase()] ?? 99;
+    const pb = PAGE_ORDER[b.current_page?.toUpperCase()] ?? 99;
+    return pa - pb;
+  });
+
+  const list = document.getElementById('onlineList');
+  if (!sorted.length) {
+    list.innerHTML = '<div style="font-size:11px;color:var(--text3);text-align:center;padding:8px 0;">ไม่มีผู้ใช้ออนไลน์</div>';
+    return;
+  }
+
+  list.innerHTML = sorted.map(u => {
+    const page = u.current_page || '—';
+    const pageColor = PAGE_COLORS[page.toUpperCase()] || '#9ca3af';
+    const mins = u.online_minutes > 0 ? u.online_minutes + 'm' : 'Just now';
+    return `
+      <div class="online-user" data-page="${page}">
+        <div style="flex:1;min-width:0;">
+          <div class="online-name">${u.name}</div>
+        </div>
+        <div class="online-mins">${mins}</div>
+      </div>`;
+  }).join('');
+
+  // Insert page badges before first user of each group
+  let lastPage = null;
+  list.querySelectorAll('.online-user').forEach(el => {
+    const page = el.dataset.page;
+    const pageColor = PAGE_COLORS[page?.toUpperCase()] || '#9ca3af';
+    if (page !== lastPage) {
+      const badge = document.createElement('div');
+      badge.style.cssText = `display:flex;align-items:center;gap:6px;margin-top:${lastPage ? '6px' : '0'};`;
+      badge.innerHTML = `<span style="font-size:10px;font-weight:600;background:${pageColor}22;color:${pageColor};border:1px solid ${pageColor}55;border-radius:4px;padding:1px 8px;">${page}</span>`;
+      list.insertBefore(badge, el);
+      lastPage = page;
+    }
+  });
+}
+
+function setStatus(type, msg) {
+  const el = document.getElementById('statusBadge');
+  if (type==='ok')      { el.className='status-ok';  el.textContent='✓ เชื่อมต่อสำเร็จ'; }
+  else if (type==='error'){ el.className='status-err'; el.textContent='✕ ' + (msg||'Error'); }
+  else                  { el.className='status-loading'; el.innerHTML='<span class="spinner"></span> กำลังโหลด...'; }
+}
+
+function startCountdown() {
+  clearInterval(refreshTimer); clearInterval(countdownTimer);
+  countdownSec = 60;
+  countdownTimer = setInterval(() => {
+    countdownSec--;
+    document.getElementById('refreshInfo').textContent = 'refresh ใน ' + countdownSec + 's';
+    if (countdownSec <= 0) { clearInterval(countdownTimer); fetchData(); }
+  }, 1000);
+  document.getElementById('lastUpdate').textContent =
+    'อัปเดต ' + new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+// ── Helpers ──
+function $(id) { return document.getElementById(id); }
+function set(id, val) { const el=$(id); if(el) el.textContent = (val ?? '—'); }
+function getOT(arr, type) { return (arr||[]).find(x=>x.order_type===type)?.count ?? 0; }
+
+function buildDonutArcs(svgId, issues, total) {
+  const svg = $(svgId);
+  svg.querySelectorAll('.arc').forEach(e=>e.remove());
+  if (!total) return;
+  const C = 2*Math.PI*28;
+  let offset = 0;
+  issues.forEach((item,i) => {
+    if (!item.count) return;
+    const dash = (item.count/total)*C;
+    const arc = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    arc.setAttribute('class','arc');
+    arc.setAttribute('cx','38'); arc.setAttribute('cy','38'); arc.setAttribute('r','28');
+    arc.setAttribute('fill','none'); arc.setAttribute('stroke',COLORS[i%COLORS.length]);
+    arc.setAttribute('stroke-width','8');
+    arc.setAttribute('stroke-dasharray', dash+' '+C);
+    arc.setAttribute('stroke-dashoffset', -(offset - C*0.25));
+    arc.setAttribute('stroke-linecap','round');
+    svg.insertBefore(arc, svg.querySelector('text'));
+    offset += dash;
+  });
+}
+
+function buildTags(containerId, issues) {
+  const el = $(containerId);
+  if(!el) return;
+  el.innerHTML = issues.filter(x=>x.count>0).map((item,i)=>`
+    <div class="stag">
+      <span class="stag-name"><span class="stag-dot" style="background:${COLORS[i%COLORS.length]}"></span>${item.issue}</span>
+      <span class="stag-val">${item.count}</span>
+    </div>`).join('');
+}
+
+// ── Render Left panel (all channels) ──
+function renderLeft(d) {
+  const today = d.today;
+  const totalToday = (today.normal_all||0) + (today.urgent_all||0);
+  set('donutTotal', totalToday);
+  set('normalCount', today.normal_all);
+  set('urgentCount', today.urgent_all);
+  const C = 2*Math.PI*48;
+  const nPct = totalToday ? (today.normal_all/totalToday)*C : 0;
+  const uPct = totalToday ? (today.urgent_all/totalToday)*C : 0;
+  $('donutNormal').setAttribute('stroke-dasharray', nPct+' '+C);
+  $('donutUrgent').setAttribute('stroke-dasharray', uPct+' '+C);
+  $('donutUrgent').setAttribute('stroke-dashoffset', -(nPct - C*0.25));
+  set('urgentCompleted', d.urgent_complete_count_today);
+  set('urgentPending',   (today.urgent_all||0) - (d.urgent_complete_count_today||0));
+}
+
+// ── Render one channel column (prefix = 'L' or 'E') ──
+function renderChannel(p, d) {
+  const today = d.today, all = d.all_time, tmr = d.tomorrow;
+
+  // Header = today.normal_all (ตรงกับต้นแบบ)
+  const hdrTotal = today.normal_all || 0;
+  if(p==='L') set('hdrLineTotal',  hdrTotal + ' tasks');
+  if(p==='E') set('hdrEmailTotal', hdrTotal + ' tasks');
+
+  // Create Yesterday = all_time − today − tomorrow
+  set(p+'_allStock', Math.max(0, getOT(all.all_group_order_type,'stock') - getOT(today.all_group_order_type,'stock') - getOT(tmr.all_group_order_type,'stock')));
+  set(p+'_allRx',    Math.max(0, getOT(all.all_group_order_type,'rx')    - getOT(today.all_group_order_type,'rx')    - getOT(tmr.all_group_order_type,'rx')));
+  set(p+'_allVip',   Math.max(0, (all.all_vip||0) - (today.all_vip||0) - (tmr.all_vip||0)));
+
+  // Create Today
+  set(p+'_todayStock', getOT(today.all_group_order_type,'stock'));
+  set(p+'_todayRx',    getOT(today.all_group_order_type,'rx'));
+  set(p+'_todayVip',   today.all_vip);
+
+  // Tomorrow
+  set(p+'_tmrStock', getOT(tmr.all_group_order_type,'stock'));
+  set(p+'_tmrRx',    getOT(tmr.all_group_order_type,'rx'));
+  set(p+'_tmrVip',   tmr.all_vip);
+
+  // Key-In Waiting = Create Yesterday(S+RX) + Create Today(S+RX) + Create Tomorrow(S+RX)
+  const yesterdayStockRx = Math.max(0,
+    (getOT(all.all_group_order_type,'stock') - getOT(today.all_group_order_type,'stock') - getOT(tmr.all_group_order_type,'stock')) +
+    (getOT(all.all_group_order_type,'rx')    - getOT(today.all_group_order_type,'rx')    - getOT(tmr.all_group_order_type,'rx'))
+  );
+  const todayStockRx    = getOT(today.all_group_order_type,'stock') + getOT(today.all_group_order_type,'rx');
+  const tomorrowStockRx = getOT(tmr.all_group_order_type,'stock')   + getOT(tmr.all_group_order_type,'rx');
+  set(p+'_keyinWait',   yesterdayStockRx + todayStockRx + tomorrowStockRx);
+  set(p+'_keyinCalled', all.normal_keyin_called);
+
+  // Support header + donut today
+  const supWait = today.waiting_support || 0;
+  if(p==='L') set('hdrLineSup',  supWait + ' tasks');
+  if(p==='E') set('hdrEmailSup', supWait + ' tasks');
+
+  set(p+'_supTotal', supWait);
+  buildDonutArcs(p+'_supDonut', today.support_group_by_issue, supWait);
+  buildTags(p+'_supTags', today.support_group_by_issue);
+
+  // Support stats today
+  set(p+'_supWait',   today.waiting_support);
+  set(p+'_supInProg', today.support_inprogress);
+
+  // Support result
+  set(p+'_resComplete', d.support_result_today?.complete_count);
+  set(p+'_resClose',    d.support_result_today?.close_count);
+
+  // Support Yesterday donut = all_time - today (per issue)
+  const supYestIssues = (all.support_group_by_issue||[]).map(item => {
+    const todayItem = (today.support_group_by_issue||[]).find(x=>x.issue===item.issue);
+    return { issue: item.issue, count: Math.max(0, item.count - (todayItem?.count||0)) };
+  });
+  const supYestTotal  = Math.max(0, (all.waiting_support||0) - (today.waiting_support||0));
+  const supYestWait   = supYestTotal;
+  const supYestInProg = all.support_inprogress || 0;
+
+  set(p+'_supYestTotal',    supYestTotal);
+  set(p+'_supYestWait',     supYestWait);
+  set(p+'_supYestInProg',   supYestInProg);
+  set(p+'_supYestComplete', d.support_result_today?.complete_count ?? '—');
+  set(p+'_supYestClose',    d.support_result_today?.close_count ?? '—');
+  buildDonutArcs(p+'_supYestDonut', supYestIssues, supYestTotal);
+  buildTags(p+'_supYestTags', supYestIssues);
+}
+
+// ── Init ──
+const now = new Date();
+$('dateDisplay').textContent = now.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+$('footer').textContent = 'CS Dashboard — Essilor Luxottica  ·  Auto-refresh ทุก 60 วินาที';
+
+if (token) fetchData();
+else openModal();
+</script>
+</body>
+</html>
