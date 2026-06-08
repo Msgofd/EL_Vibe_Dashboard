@@ -778,14 +778,13 @@ function renderChannel(p, d) {
   );
   const todayStockRx    = getOT(today.all_group_order_type,'stock') + getOT(today.all_group_order_type,'rx');
   const tomorrowStockRx = getOT(tmr.all_group_order_type,'stock')   + getOT(tmr.all_group_order_type,'rx');
-  const keyinWaiting      = today.normal_waiting_keyin_call || 0;
+  const keyinWaiting      = keyinStockRxTotal;
   const keyinCalledN      = all.normal_keyin_called || 0;
-  const keyinStockRxTotal = yesterdayStockRx + todayStockRx + tomorrowStockRx;
   set(p+'_keyinWait',   keyinStockRxTotal);
   set(p+'_keyinCalled', keyinCalledN);
 
-  // Key-In Done = today.normal_all − Key-In Waiting
-  // Done = 381 - 255 = 126, Total = 381, % = 126/381
+  // Key-In Done = today.normal_all − Waiting(keyinStockRxTotal)
+  // Done = 382 − 251 = 131
   const keyinBase = today.normal_all || 0;
   const keyinDone = Math.max(0, keyinBase - keyinWaiting);
   const keyinPct  = keyinBase > 0 ? Math.min(100, Math.round(keyinDone / keyinBase * 100)) : 0;
