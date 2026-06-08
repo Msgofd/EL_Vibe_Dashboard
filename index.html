@@ -64,7 +64,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 .status-loading { color:var(--text3); }
 
 /* LAYOUT */
-.layout { display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:start; }
+.layout { display:grid; grid-template-columns:270px 1fr; gap:16px; align-items:start; }
 
 /* LEFT */
 .left-panel { display:flex; flex-direction:column; gap:12px; }
@@ -135,16 +135,19 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 .sbox { border-radius:var(--r-sm); padding:8px 10px; border:1px solid; }
 .line-cell  .sbox { background:rgba(6,199,85,.07); border-color:rgba(6,199,85,.2); }
 .email-cell .sbox { background:rgba(59,130,246,.07); border-color:rgba(59,130,246,.2); }
-.sbox-lbl { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; }
-.sbox-val { font-family:var(--mono); font-size:24px; font-weight:600; color:var(--text1); line-height:1; }
+.sbox-lbl { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; }
+.sbox-lbl.lbl-red  { color:var(--red); }
+.sbox-lbl.lbl-white{ color:var(--text1); }
+.sbox-lbl.lbl-blue { color:var(--blue); }
+.sbox-val { font-family:var(--mono); font-size:30px; font-weight:600; color:var(--text1); line-height:1; }
 .sbox-val.red  { color:var(--red); }
 .sbox-val.blue { color:var(--blue); }
 
 /* support donut */
-.sup-donut-row { display:flex; align-items:center; gap:12px; }
-.sup-svg { width:76px; height:76px; flex-shrink:0; }
-.sup-tags { display:flex; flex-direction:column; gap:4px; flex:1; }
-.stag { display:flex; justify-content:space-between; align-items:center; font-size:11px; }
+.sup-donut-row { display:flex; align-items:center; gap:16px; }
+.sup-svg { width:110px; height:110px; flex-shrink:0; }
+.sup-tags { display:flex; flex-direction:column; gap:5px; flex:1; }
+.stag { display:flex; justify-content:space-between; align-items:center; font-size:13px; }
 .stag-name { color:var(--text2); display:flex; align-items:center; gap:4px; }
 .stag-dot  { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
 .stag-val  { font-family:var(--mono); font-size:11px; font-weight:500; color:var(--text1); }
@@ -154,8 +157,8 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 .smet { border-radius:var(--r-sm); padding:8px 10px; border:1px solid; }
 .line-cell  .smet { background:rgba(6,199,85,.07); border-color:rgba(6,199,85,.2); }
 .email-cell .smet { background:rgba(59,130,246,.07); border-color:rgba(59,130,246,.2); }
-.smet-lbl { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }
-.smet-val { font-family:var(--mono); font-size:24px; font-weight:600; color:var(--text1); }
+.smet-lbl { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }
+.smet-val { font-family:var(--mono); font-size:30px; font-weight:600; color:var(--text1); }
 .smet-val.red { color:var(--red); }
 
 /* result */
@@ -163,12 +166,16 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 .rbox { text-align:center; border-radius:var(--r-sm); padding:10px 8px; border:1px solid; }
 .rbox.g { background:rgba(52,211,153,.1); border-color:rgba(52,211,153,.25); }
 .rbox.r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.25); }
-.rbox-lbl { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px; }
+.rbox-lbl { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px; }
 .rbox.g .rbox-lbl { color:var(--green); }
 .rbox.r .rbox-lbl { color:var(--red); }
-.rbox-val { font-family:var(--mono); font-size:28px; font-weight:600; }
+.rbox-val { font-family:var(--mono); font-size:34px; font-weight:600; }
 .rbox.g .rbox-val { color:var(--green); }
 .rbox.r .rbox-val { color:var(--red); }
+
+.keyin-done-wrap { padding:2px 0; }
+.keyin-bar-track { height:10px; background:rgba(255,255,255,.06); border-radius:6px; overflow:hidden; border:1px solid rgba(255,255,255,.08); }
+.keyin-bar-fill  { height:100%; border-radius:6px; transition:width .8s cubic-bezier(.4,0,.2,1); min-width:2px; }
 
 .spinner { display:inline-block; width:10px; height:10px; border:2px solid var(--border2); border-top-color:var(--blue); border-radius:50%; animation:spin .7s linear infinite; }
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -178,7 +185,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
   padding:6px 8px; border-radius:var(--r-sm);
   background:var(--surface2); border:1px solid var(--border);
 }
-.online-name  { font-size:11px; font-weight:500; color:var(--text1); line-height:1.2; }
+.online-name  { font-size:14px; font-weight:600; color:var(--text1); line-height:1.3; }
 .online-page  { font-size:10px; color:var(--text3); }
 .online-duties { display:flex; gap:3px; flex-wrap:wrap; margin-top:2px; }
 .duty-tag { font-size:9px; padding:1px 5px; border-radius:3px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; }
@@ -316,57 +323,57 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 
       <!-- Create Yesterday (บรรทัดแรก) -->
       <div class="data-row">
-        <div class="row-label-cell"><div class="row-label-text">Create Yesterday</div></div>
+        <div class="row-label-cell"><div class="row-label-text" style="color:var(--red);">Create Yesterday</div></div>
         <div class="row-data-cell line-cell">
           <div class="stat-grid c3">
-            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val red" id="L_allStock">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val red" id="L_allRx">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val red" id="L_allVip">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-red">Stock</div><div class="sbox-val red" id="L_allStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-red">RX</div><div class="sbox-val red" id="L_allRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-red">VIP</div><div class="sbox-val red" id="L_allVip">—</div></div>
           </div>
         </div>
         <div class="row-data-cell email-cell">
           <div class="stat-grid c3">
-            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val red" id="E_allStock">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val red" id="E_allRx">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val red" id="E_allVip">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-red">Stock</div><div class="sbox-val red" id="E_allStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-red">RX</div><div class="sbox-val red" id="E_allRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-red">VIP</div><div class="sbox-val red" id="E_allVip">—</div></div>
           </div>
         </div>
       </div>
 
       <!-- Create Today (บรรทัดสอง) -->
       <div class="data-row">
-        <div class="row-label-cell"><div class="row-label-text">Create Today</div></div>
+        <div class="row-label-cell"><div class="row-label-text" style="color:var(--text1);">Create Today</div></div>
         <div class="row-data-cell line-cell">
           <div class="stat-grid c3">
-            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val" id="L_todayStock">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val" id="L_todayRx">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val" id="L_todayVip">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-white">Stock</div><div class="sbox-val" id="L_todayStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-white">RX</div><div class="sbox-val" id="L_todayRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-white">VIP</div><div class="sbox-val" id="L_todayVip">—</div></div>
           </div>
         </div>
         <div class="row-data-cell email-cell">
           <div class="stat-grid c3">
-            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val" id="E_todayStock">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val" id="E_todayRx">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val" id="E_todayVip">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-white">Stock</div><div class="sbox-val" id="E_todayStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-white">RX</div><div class="sbox-val" id="E_todayRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-white">VIP</div><div class="sbox-val" id="E_todayVip">—</div></div>
           </div>
         </div>
       </div>
 
       <!-- Create Tomorrow -->
       <div class="data-row">
-        <div class="row-label-cell"><div class="row-label-text">Create Tomorrow</div></div>
+        <div class="row-label-cell"><div class="row-label-text" style="color:var(--blue);">Create Tomorrow</div></div>
         <div class="row-data-cell line-cell">
           <div class="stat-grid c3">
-            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val blue" id="L_tmrStock">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val blue" id="L_tmrRx">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val blue" id="L_tmrVip">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-blue">Stock</div><div class="sbox-val blue" id="L_tmrStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-blue">RX</div><div class="sbox-val blue" id="L_tmrRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-blue">VIP</div><div class="sbox-val blue" id="L_tmrVip">—</div></div>
           </div>
         </div>
         <div class="row-data-cell email-cell">
           <div class="stat-grid c3">
-            <div class="sbox"><div class="sbox-lbl">Stock</div><div class="sbox-val blue" id="E_tmrStock">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">RX</div><div class="sbox-val blue" id="E_tmrRx">—</div></div>
-            <div class="sbox"><div class="sbox-lbl">VIP</div><div class="sbox-val blue" id="E_tmrVip">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-blue">Stock</div><div class="sbox-val blue" id="E_tmrStock">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-blue">RX</div><div class="sbox-val blue" id="E_tmrRx">—</div></div>
+            <div class="sbox"><div class="sbox-lbl lbl-blue">VIP</div><div class="sbox-val blue" id="E_tmrVip">—</div></div>
           </div>
         </div>
       </div>
@@ -384,6 +391,35 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
           <div class="stat-grid c2">
             <div class="sbox"><div class="sbox-lbl">Waiting</div><div class="sbox-val" id="E_keyinWait">—</div></div>
             <div class="sbox"><div class="sbox-lbl">Called</div><div class="sbox-val" id="E_keyinCalled">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key-In Done -->
+      <div class="data-row">
+        <div class="row-label-cell"><div class="row-label-text" style="color:var(--green);">Key-In Done</div></div>
+        <div class="row-data-cell line-cell">
+          <div class="keyin-done-wrap">
+            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+              <span class="sbox-val" style="color:var(--green)" id="L_keyinDone">—</span>
+              <span style="font-family:var(--mono);font-size:30px;font-weight:600;color:var(--text3);">/ <span id="L_keyinTotal">—</span> งาน</span>
+              <span class="sbox-val" style="color:var(--green);margin-left:auto;" id="L_keyinPct">—%</span>
+            </div>
+            <div class="keyin-bar-track">
+              <div class="keyin-bar-fill" id="L_keyinBar" style="width:0%;background:linear-gradient(90deg,#06c755,#34d399);"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row-data-cell email-cell">
+          <div class="keyin-done-wrap">
+            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+              <span class="sbox-val" style="color:var(--green)" id="E_keyinDone">—</span>
+              <span style="font-family:var(--mono);font-size:30px;font-weight:600;color:var(--text3);">/ <span id="E_keyinTotal">—</span> งาน</span>
+              <span class="sbox-val" style="color:var(--green);margin-left:auto;" id="E_keyinPct">—%</span>
+            </div>
+            <div class="keyin-bar-track">
+              <div class="keyin-bar-fill" id="E_keyinBar" style="width:0%;background:linear-gradient(90deg,#3b82f6,#60a5fa);"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -420,7 +456,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
           <div class="sup-donut-row">
             <svg class="sup-svg" id="L_supDonut" viewBox="0 0 76 76">
               <circle cx="38" cy="38" r="28" fill="none" stroke="#1c2333" stroke-width="8"/>
-              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#e8eaf0" id="L_supTotal">—</text>
+              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="20" font-weight="600" fill="#e8eaf0" id="L_supTotal">—</text>
               <text x="38" y="46" text-anchor="middle" font-family="Sarabun" font-size="7" fill="#4a5068">Task</text>
             </svg>
             <div class="sup-tags" id="L_supTags"></div>
@@ -430,7 +466,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
           <div class="sup-donut-row">
             <svg class="sup-svg" id="E_supDonut" viewBox="0 0 76 76">
               <circle cx="38" cy="38" r="28" fill="none" stroke="#1c2333" stroke-width="8"/>
-              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#e8eaf0" id="E_supTotal">—</text>
+              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="20" font-weight="600" fill="#e8eaf0" id="E_supTotal">—</text>
               <text x="38" y="46" text-anchor="middle" font-family="Sarabun" font-size="7" fill="#4a5068">Task</text>
             </svg>
             <div class="sup-tags" id="E_supTags"></div>
@@ -481,7 +517,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
           <div class="sup-donut-row">
             <svg class="sup-svg" id="L_supYestDonut" viewBox="0 0 76 76">
               <circle cx="38" cy="38" r="28" fill="none" stroke="#1c2333" stroke-width="8"/>
-              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#e8eaf0" id="L_supYestTotal">—</text>
+              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="20" font-weight="600" fill="#e8eaf0" id="L_supYestTotal">—</text>
               <text x="38" y="46" text-anchor="middle" font-family="Sarabun" font-size="7" fill="#4a5068">Task</text>
             </svg>
             <div class="sup-tags" id="L_supYestTags"></div>
@@ -491,7 +527,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
           <div class="sup-donut-row">
             <svg class="sup-svg" id="E_supYestDonut" viewBox="0 0 76 76">
               <circle cx="38" cy="38" r="28" fill="none" stroke="#1c2333" stroke-width="8"/>
-              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#e8eaf0" id="E_supYestTotal">—</text>
+              <text x="38" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="20" font-weight="600" fill="#e8eaf0" id="E_supYestTotal">—</text>
               <text x="38" y="46" text-anchor="middle" font-family="Sarabun" font-size="7" fill="#4a5068">Task</text>
             </svg>
             <div class="sup-tags" id="E_supYestTags"></div>
@@ -525,14 +561,14 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
         </div>
         <div class="row-data-cell line-cell" style="background:rgba(251,191,36,.05);">
           <div class="result-grid">
-            <div class="rbox g" style="background:#f0fdf4;border-color:#bbf7d0;"><div class="rbox-lbl">Completed</div><div class="rbox-val" id="L_supYestComplete">—</div></div>
-            <div class="rbox r" style="background:#fef2f2;border-color:#fecaca;"><div class="rbox-lbl">Closed</div><div class="rbox-val" id="L_supYestClose">—</div></div>
+            <div class="rbox g"><div class="rbox-lbl">Completed</div><div class="rbox-val" id="L_supYestComplete">—</div></div>
+            <div class="rbox r"><div class="rbox-lbl">Closed</div><div class="rbox-val" id="L_supYestClose">—</div></div>
           </div>
         </div>
         <div class="row-data-cell email-cell" style="background:rgba(251,191,36,.05);">
           <div class="result-grid">
-            <div class="rbox g" style="background:#f0fdf4;border-color:#bbf7d0;"><div class="rbox-lbl">Completed</div><div class="rbox-val" id="E_supYestComplete">—</div></div>
-            <div class="rbox r" style="background:#fef2f2;border-color:#fecaca;"><div class="rbox-lbl">Closed</div><div class="rbox-val" id="E_supYestClose">—</div></div>
+            <div class="rbox g"><div class="rbox-lbl">Completed</div><div class="rbox-val" id="E_supYestComplete">—</div></div>
+            <div class="rbox r"><div class="rbox-lbl">Closed</div><div class="rbox-val" id="E_supYestClose">—</div></div>
           </div>
         </div>
       </div>
@@ -742,8 +778,22 @@ function renderChannel(p, d) {
   );
   const todayStockRx    = getOT(today.all_group_order_type,'stock') + getOT(today.all_group_order_type,'rx');
   const tomorrowStockRx = getOT(tmr.all_group_order_type,'stock')   + getOT(tmr.all_group_order_type,'rx');
-  set(p+'_keyinWait',   yesterdayStockRx + todayStockRx + tomorrowStockRx);
-  set(p+'_keyinCalled', all.normal_keyin_called);
+  const keyinWaiting      = today.normal_waiting_keyin_call || 0;
+  const keyinCalledN      = all.normal_keyin_called || 0;
+  const keyinStockRxTotal = yesterdayStockRx + todayStockRx + tomorrowStockRx;
+  set(p+'_keyinWait',   keyinStockRxTotal);
+  set(p+'_keyinCalled', keyinCalledN);
+
+  // Key-In Done = today.normal_all − Key-In Waiting
+  // Done = 381 - 255 = 126, Total = 381, % = 126/381
+  const keyinBase = today.normal_all || 0;
+  const keyinDone = Math.max(0, keyinBase - keyinWaiting);
+  const keyinPct  = keyinBase > 0 ? Math.min(100, Math.round(keyinDone / keyinBase * 100)) : 0;
+  set(p+'_keyinDone',  keyinDone);
+  set(p+'_keyinTotal', keyinBase);
+  set(p+'_keyinPct',   keyinPct + '%');
+  const barEl = document.getElementById(p+'_keyinBar');
+  if (barEl) setTimeout(() => { barEl.style.width = keyinPct + '%'; }, 100);
 
   // Support header + donut today
   const supWait = today.waiting_support || 0;
