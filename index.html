@@ -124,7 +124,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 .data-row:last-child { border-bottom:none; }
 .row-label-cell { padding:10px 12px; border-right:1px solid var(--border); display:flex; align-items:center; background:var(--surface2); }
 .row-label-text { font-size:11px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:.06em; }
-.row-data-cell { padding:14px 16px; border-right:1px solid var(--border); }
+.row-data-cell { padding:10px 12px; border-right:1px solid var(--border); }
 .row-data-cell:last-child { border-right:none; }
 .row-data-cell.line-cell  { background:rgba(6,199,85,.04); }
 .row-data-cell.email-cell { background:rgba(59,130,246,.04); }
@@ -132,44 +132,44 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 .stat-grid { display:grid; gap:6px; }
 .stat-grid.c2 { grid-template-columns:1fr 1fr; }
 .stat-grid.c3 { grid-template-columns:1fr 1fr 1fr; }
-.sbox { border-radius:var(--r-sm); padding:8px 10px; border:1px solid; }
+.sbox { border-radius:var(--r-sm); padding:6px 8px; border:1px solid; }
 .line-cell  .sbox { background:rgba(6,199,85,.07); border-color:rgba(6,199,85,.2); }
 .email-cell .sbox { background:rgba(59,130,246,.07); border-color:rgba(59,130,246,.2); }
-.sbox-lbl { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; }
+.sbox-lbl { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
 .sbox-lbl.lbl-red  { color:var(--red); }
 .sbox-lbl.lbl-white{ color:var(--text1); }
 .sbox-lbl.lbl-blue { color:var(--blue); }
-.sbox-val { font-family:var(--mono); font-size:30px; font-weight:600; color:var(--text1); line-height:1; }
+.sbox-val { font-family:var(--mono); font-size:24px; font-weight:600; color:var(--text1); line-height:1; }
 .sbox-val.red  { color:var(--red); }
 .sbox-val.blue { color:var(--blue); }
 
 /* support donut */
-.sup-donut-row { display:flex; align-items:center; gap:16px; }
-.sup-svg { width:110px; height:110px; flex-shrink:0; }
-.sup-tags { display:flex; flex-direction:column; gap:5px; flex:1; }
-.stag { display:flex; justify-content:space-between; align-items:center; font-size:13px; }
+.sup-donut-row { display:flex; align-items:center; gap:12px; }
+.sup-svg { width:86px; height:86px; flex-shrink:0; }
+.sup-tags { display:flex; flex-direction:column; gap:4px; flex:1; }
+.stag { display:flex; justify-content:space-between; align-items:center; font-size:12px; }
 .stag-name { color:var(--text2); display:flex; align-items:center; gap:4px; }
 .stag-dot  { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
 .stag-val  { font-family:var(--mono); font-size:11px; font-weight:500; color:var(--text1); }
 
 /* smet */
 .smet-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-.smet { border-radius:var(--r-sm); padding:8px 10px; border:1px solid; }
+.smet { border-radius:var(--r-sm); padding:6px 8px; border:1px solid; }
 .line-cell  .smet { background:rgba(6,199,85,.07); border-color:rgba(6,199,85,.2); }
 .email-cell .smet { background:rgba(59,130,246,.07); border-color:rgba(59,130,246,.2); }
-.smet-lbl { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }
-.smet-val { font-family:var(--mono); font-size:30px; font-weight:600; color:var(--text1); }
+.smet-lbl { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }
+.smet-val { font-family:var(--mono); font-size:24px; font-weight:600; color:var(--text1); }
 .smet-val.red { color:var(--red); }
 
 /* result */
 .result-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-.rbox { text-align:center; border-radius:var(--r-sm); padding:10px 8px; border:1px solid; }
+.rbox { text-align:center; border-radius:var(--r-sm); padding:7px 8px; border:1px solid; }
 .rbox.g { background:rgba(52,211,153,.1); border-color:rgba(52,211,153,.25); }
 .rbox.r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.25); }
-.rbox-lbl { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px; }
+.rbox-lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; margin-bottom:3px; }
 .rbox.g .rbox-lbl { color:var(--green); }
 .rbox.r .rbox-lbl { color:var(--red); }
-.rbox-val { font-family:var(--mono); font-size:34px; font-weight:600; }
+.rbox-val { font-family:var(--mono); font-size:26px; font-weight:600; }
 .rbox.g .rbox-val { color:var(--green); }
 .rbox.r .rbox-val { color:var(--red); }
 
