@@ -254,31 +254,6 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 
   <!-- LEFT -->
   <div class="left-panel">
-    <div class="card">
-      <div class="card-label">Total Task Today</div>
-      <div class="donut-wrap">
-        <svg id="donutSvg" width="120" height="120" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="48" fill="none" stroke="#1c2333" stroke-width="13"/>
-          <circle id="donutNormal" cx="60" cy="60" r="48" fill="none" stroke="#111827" stroke-width="13"
-            stroke-dasharray="0 301.6" stroke-dashoffset="75.4" stroke-linecap="round"/>
-          <circle id="donutUrgent" cx="60" cy="60" r="48" fill="none" stroke="#ef4444" stroke-width="13"
-            stroke-dasharray="0 301.6" stroke-linecap="round"/>
-          <text id="donutTotal" x="60" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="22" font-weight="600" fill="#e8eaf0">—</text>
-          <text x="60" y="71" text-anchor="middle" font-family="Sarabun" font-size="11" fill="#4a5068">Task</text>
-        </svg>
-        <div class="donut-legend">
-          <div class="leg-row">
-            <div class="leg-left"><span class="leg-dot" style="background:#111827"></span>Normal Task</div>
-            <span class="leg-num" id="normalCount">—</span>
-          </div>
-          <div class="leg-row">
-            <div class="leg-left"><span class="leg-dot" style="background:#ef4444"></span>Urgent Task</div>
-            <span class="leg-num" id="urgentCount">—</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- ONLINE USERS -->
     <div class="card" id="onlineCard">
       <div class="card-label" style="display:flex;align-items:center;justify-content:space-between;">
@@ -301,24 +276,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-label">Urgent Task</div>
-      <div class="urgent-item g">
-        <div class="u-ico">✓</div>
-        <div>
-          <div class="u-lbl">Completed</div>
-          <div class="u-num" id="urgentCompleted">—</div>
-        </div>
-      </div>
-      <div class="urgent-item r">
-        <div class="u-ico">!</div>
-        <div>
-          <div class="u-lbl">Pending</div>
-          <div class="u-num" id="urgentPending">—</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </div><!-- end left-panel -->
 
   <!-- RIGHT -->
   <div class="right-panel">
@@ -327,6 +285,67 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
 
     <!-- TASK CREATOR -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+
+    <!-- Total Task Today + Urgent Task Banner -->
+    <div class="section-block" style="padding:14px 18px;">
+      <div style="display:flex;align-items:center;gap:18px;">
+        <!-- Left: Title + Total number -->
+        <div style="flex-shrink:0;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:4px;">Total Task Today</div>
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <span id="donutTotal" style="font-family:var(--mono);font-size:36px;font-weight:700;color:var(--text1);line-height:1;">—</span>
+            <span style="font-size:12px;color:var(--text3);">Tasks</span>
+          </div>
+        </div>
+        <!-- Donut -->
+        <svg id="donutSvg" width="70" height="70" viewBox="0 0 120 120" style="flex-shrink:0;">
+          <circle cx="60" cy="60" r="48" fill="none" stroke="#1c2333" stroke-width="13"/>
+          <circle id="donutNormal" cx="60" cy="60" r="48" fill="none" stroke="#374151" stroke-width="13"
+            stroke-dasharray="0 301.6" stroke-dashoffset="75.4" stroke-linecap="round"/>
+          <circle id="donutUrgent" cx="60" cy="60" r="48" fill="none" stroke="#ef4444" stroke-width="13"
+            stroke-dasharray="0 301.6" stroke-linecap="round"/>
+        </svg>
+        <!-- Normal / Urgent counts -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+            <div style="display:flex;align-items:center;gap:6px;color:var(--text2);">
+              <span style="width:8px;height:8px;border-radius:50%;background:#374151;display:inline-block;"></span>Normal
+            </div>
+            <span id="normalCount" style="font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text1);">—</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+            <div style="display:flex;align-items:center;gap:6px;color:var(--text2);">
+              <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;"></span>Urgent
+            </div>
+            <span id="urgentCount" style="font-family:var(--mono);font-size:14px;font-weight:600;color:var(--red);">—</span>
+          </div>
+        </div>
+        <!-- Divider -->
+        <div style="width:1px;height:52px;background:var(--border2);flex-shrink:0;"></div>
+        <!-- Urgent Task: Completed / Pending -->
+        <div style="flex-shrink:0;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px;">Urgent Task</div>
+          <div style="display:flex;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:var(--r-sm);padding:7px 12px;">
+              <span style="width:22px;height:22px;border-radius:var(--r-sm);background:rgba(52,211,153,.2);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">✓</span>
+              <div>
+                <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:1px;">Completed</div>
+                <div id="urgentCompleted" style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--green);line-height:1;">—</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);border-radius:var(--r-sm);padding:7px 12px;">
+              <span style="width:22px;height:22px;border-radius:var(--r-sm);background:rgba(248,113,113,.2);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">!</span>
+              <div>
+                <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:1px;">Pending</div>
+                <div id="urgentPending" style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--red);line-height:1;">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="section-block">
       <div class="section-head">
         <div class="section-head-ico" style="background:#ede9fe;">
@@ -452,6 +471,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
         </div>
       </div>
     </div>
+    </div><!-- end Task Creator column wrapper -->
 
     <!-- SUPPORT -->
     <div class="section-block">
