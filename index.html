@@ -216,7 +216,11 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
 <!-- TOKEN MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
-    <h2>🔑 ใส่ Bearer Token</h2>
+    <h2>🔑 Bearer Token</h2>
+    <div id="tokenSavedBanner" style="display:none;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#34d399;display:flex;align-items:center;justify-content:space-between;">
+      <span>✓ มี Token บันทึกไว้แล้ว</span>
+      <button onclick="clearToken()" style="background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.3);border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">ลบ Token</button>
+    </div>
     <p>คัดลอก Token จาก DevTools → Network → dashboard → Request Headers → Authorization (ไม่ต้องใส่คำว่า "Bearer " นำหน้า)</p>
     <textarea id="tokenInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
     <div class="modal-footer">
@@ -238,7 +242,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text1); min-he
   <div class="topbar-right">
     <span class="refresh-info" id="refreshInfo">—</span>
     <div class="date-pill" id="dateDisplay">—</div>
-    <button class="token-btn" onclick="openModal()">🔑 Token</button>
+    <button class="token-btn" id="tokenBtn" onclick="openModal()">🔑 Token</button>
     <div class="live-badge">Live</div>
   </div>
 </div>
@@ -619,13 +623,41 @@ const COLORS = ['#3b82f6','#c084fc','#818cf8','#34d399','#f59e0b','#f87171','#a7
 let token = localStorage.getItem('el_token') || '';
 let refreshTimer, countdownTimer, countdownSec = 60;
 
-function openModal() { document.getElementById('tokenInput').value = token; document.getElementById('modalOverlay').classList.remove('hidden'); }
+function updateTokenBtn() {
+  const btn = document.getElementById('tokenBtn');
+  if (!btn) return;
+  if (token) {
+    btn.textContent = '✓ Token';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'rgba(52,211,153,.4)';
+  } else {
+    btn.textContent = '🔑 Token';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }
+}
+function openModal() {
+  const banner = document.getElementById('tokenSavedBanner');
+  if (banner) banner.style.display = token ? 'flex' : 'none';
+  document.getElementById('tokenInput').value = '';
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
 function closeModal() { document.getElementById('modalOverlay').classList.add('hidden'); }
 function saveToken() {
-  token = document.getElementById('tokenInput').value.trim().replace(/^Bearer\s+/i,'');
+  const val = document.getElementById('tokenInput').value.trim().replace(/^Bearer\s+/i,'');
+  if (val) token = val;
   localStorage.setItem('el_token', token);
+  updateTokenBtn();
   closeModal();
   fetchData();
+}
+function clearToken() {
+  token = '';
+  localStorage.removeItem('el_token');
+  updateTokenBtn();
+  document.getElementById('tokenInput').value = '';
+  const banner = document.getElementById('tokenSavedBanner');
+  if (banner) banner.style.display = 'none';
 }
 
 // ── Fetch both channels in parallel ──
@@ -757,7 +789,7 @@ function renderDiabloAgents(agents) {
         <span class="diablo-presence" style="background:${s.dot};box-shadow:0 0 6px ${s.dot}66;"></span>
         <div style="flex:1;min-width:0;overflow:hidden;">
           <div class="diablo-name">${fullName}</div>
-          <div class="diablo-status">${customStatus} · ${handled} calls · ${occ}</div>
+          <div class="diablo-status">${customStatus} · ${occ}</div>
         </div>
         <span class="diablo-badge" style="background:${s.bg};color:${s.color};">${a.agentStatus}</span>
       </div>`;
@@ -924,6 +956,7 @@ const now = new Date();
 $('dateDisplay').textContent = now.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
 $('footer').textContent = 'CS Dashboard — Essilor Luxottica  ·  Auto-refresh ทุก 60 วินาที';
 
+updateTokenBtn();
 if (token) fetchData();
 else openModal();
 </script>
