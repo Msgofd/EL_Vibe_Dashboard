@@ -732,7 +732,7 @@ function renderDiabloAgents(agents) {
     'PAUSE':     { bg:'rgba(248,113,113,.15)',  color:'#f87171', dot:'#f87171' },
     'AWAY':      { bg:'rgba(107,114,128,.15)',  color:'#9ca3af', dot:'#6b7280' },
   };
-  const ORDER = { AVAILABLE:0, WORKING:1, PAUSE:2, AWAY:3 };
+  const ORDER = { PAUSE:0, AWAY:1, AVAILABLE:2, WORKING:3 };
 
   if(countEl) countEl.textContent = agents.length + ' คน';
 
