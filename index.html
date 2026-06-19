@@ -10,15 +10,26 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg:#0e1117; --surface:#161b26; --surface2:#1c2333;
-  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.13);
-  --text1:#e8eaf0; --text2:#8b91a8; --text3:#4a5068;
-  --line:#06c755; --line-lt:rgba(6,199,85,.12); --line-md:rgba(6,199,85,.25);
-  --email:#3b82f6; --email-lt:rgba(59,130,246,.12); --email-md:rgba(59,130,246,.25);
-  --red:#f87171; --red-lt:rgba(248,113,113,.12);
-  --blue:#60a5fa; --green:#34d399; --green-lt:rgba(52,211,153,.12); --amber:#fbbf24;
+  --bg:#f0f2f5; --surface:#ffffff; --surface2:#f3f4f6;
+  --border:rgba(0,0,0,.08); --border2:rgba(0,0,0,.13);
+  --text1:#111827; --text2:#4b5563; --text3:#9ca3af;
+  --line:#059669; --line-lt:rgba(5,150,105,.10); --line-md:rgba(5,150,105,.25);
+  --email:#2563eb; --email-lt:rgba(37,99,235,.10); --email-md:rgba(37,99,235,.25);
+  --red:#dc2626; --red-lt:rgba(220,38,38,.10);
+  --blue:#2563eb; --green:#059669; --green-lt:rgba(5,150,105,.10); --amber:#d97706;
   --font:'Sarabun',sans-serif; --mono:'JetBrains Mono',monospace;
   --r-sm:6px; --r-md:10px; --r-lg:14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:#0e1117; --surface:#161b26; --surface2:#1c2333;
+    --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.13);
+    --text1:#e8eaf0; --text2:#8b91a8; --text3:#4a5068;
+    --line:#06c755; --line-lt:rgba(6,199,85,.12); --line-md:rgba(6,199,85,.25);
+    --email:#3b82f6; --email-lt:rgba(59,130,246,.12); --email-md:rgba(59,130,246,.25);
+    --red:#f87171; --red-lt:rgba(248,113,113,.12);
+    --blue:#60a5fa; --green:#34d399; --green-lt:rgba(52,211,153,.12); --amber:#fbbf24;
+  }
 }
 body { font-family:var(--font); background:var(--bg); color:var(--text1); min-height:100vh; padding:20px 24px 48px; font-size:14px; line-height:1.5; }
 
