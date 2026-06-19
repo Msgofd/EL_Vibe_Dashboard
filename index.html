@@ -918,8 +918,9 @@ function renderChannel(p, d) {
   set(p+'_keyinWait',   keyinStockRxTotal);
   set(p+'_keyinCalled', keyinCalledN);
 
-  // Key-In Done = today.normal_all − Waiting(keyinStockRxTotal)
-  const keyinBase = today.normal_all || 0;
+  // Key-In Done = (today.normal_all − tomorrow S+RX) − Waiting
+  const tomorrowStockRx = getOT(tmr.all_group_order_type,'stock') + getOT(tmr.all_group_order_type,'rx');
+  const keyinBase = Math.max(0, (today.normal_all || 0) - tomorrowStockRx);
   const keyinDone = Math.max(0, keyinBase - keyinWaiting);
   const keyinPct  = keyinBase > 0 ? Math.min(100, Math.round(keyinDone / keyinBase * 100)) : 0;
   set(p+'_keyinDone',  keyinDone);
