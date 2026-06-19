@@ -708,12 +708,14 @@ function renderOnlineUsers(data) {
   const users = data?.online_users || [];
   set('onlineCount', users.length + ' คน');
 
-  const PAGE_ORDER = { 'VIP':0, 'STOCK':1, 'RX':2 };
-  const PAGE_COLORS = { 'VIP':'#f59e0b', 'STOCK':'#3b82f6', 'RX':'#10b981' };
+  const PAGE_ORDER  = { 'PENDING TICKET':0, 'KEY-IN':1, 'FIFO':2, 'TASK CREATION':3, 'VIP':4, 'STOCK':5, 'RX':6 };
+  const PAGE_COLORS = { 'PENDING TICKET':'#a78bfa', 'KEY-IN':'#f59e0b', 'FIFO':'#f97316', 'TASK CREATION':'#06b6d4', 'VIP':'#f59e0b', 'STOCK':'#3b82f6', 'RX':'#10b981' };
+
+  const normalize = s => (s || '').trim().toUpperCase();
 
   const sorted = [...users].sort((a,b) => {
-    const pa = PAGE_ORDER[a.current_page?.toUpperCase()] ?? 99;
-    const pb = PAGE_ORDER[b.current_page?.toUpperCase()] ?? 99;
+    const pa = PAGE_ORDER[normalize(a.current_page)] ?? 99;
+    const pb = PAGE_ORDER[normalize(b.current_page)] ?? 99;
     return pa - pb;
   });
 
@@ -724,8 +726,8 @@ function renderOnlineUsers(data) {
   }
 
   list.innerHTML = sorted.map(u => {
-    const page = u.current_page || '—';
-    const pageColor = PAGE_COLORS[page.toUpperCase()] || '#9ca3af';
+    const page = normalize(u.current_page) || '—';
+    const pageColor = PAGE_COLORS[page] || '#9ca3af';
     const mins = u.online_minutes > 0 ? u.online_minutes + 'm' : 'Just now';
     return `
       <div class="online-user" data-page="${page}">
@@ -740,7 +742,7 @@ function renderOnlineUsers(data) {
   let lastPage = null;
   list.querySelectorAll('.online-user').forEach(el => {
     const page = el.dataset.page;
-    const pageColor = PAGE_COLORS[page?.toUpperCase()] || '#9ca3af';
+    const pageColor = PAGE_COLORS[page] || '#9ca3af';
     if (page !== lastPage) {
       const badge = document.createElement('div');
       badge.style.cssText = `display:flex;align-items:center;gap:6px;margin-top:${lastPage ? '6px' : '0'};`;
@@ -904,14 +906,13 @@ function renderChannel(p, d) {
   set(p+'_tmrRx',    getOT(tmr.all_group_order_type,'rx'));
   set(p+'_tmrVip',   tmr.all_vip);
 
-  // Key-In Waiting = Create Yesterday(S+RX) + Create Today(S+RX) + Create Tomorrow(S+RX)
+  // Key-In Waiting = Create Yesterday(S+RX) + Create Today(S+RX) เท่านั้น (ไม่รวม Tomorrow)
   const yesterdayStockRx = Math.max(0,
     (getOT(all.all_group_order_type,'stock') - getOT(today.all_group_order_type,'stock') - getOT(tmr.all_group_order_type,'stock')) +
     (getOT(all.all_group_order_type,'rx')    - getOT(today.all_group_order_type,'rx')    - getOT(tmr.all_group_order_type,'rx'))
   );
   const todayStockRx    = getOT(today.all_group_order_type,'stock') + getOT(today.all_group_order_type,'rx');
-  const tomorrowStockRx = getOT(tmr.all_group_order_type,'stock')   + getOT(tmr.all_group_order_type,'rx');
-  const keyinStockRxTotal = yesterdayStockRx + todayStockRx + tomorrowStockRx;
+  const keyinStockRxTotal = yesterdayStockRx + todayStockRx;
   const keyinWaiting      = keyinStockRxTotal;
   const keyinCalledN      = all.normal_keyin_called || 0;
   set(p+'_keyinWait',   keyinStockRxTotal);
